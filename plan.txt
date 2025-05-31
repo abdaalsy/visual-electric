@@ -1,0 +1,15 @@
+1. Pass a problem to an LLM which will extract the key details and put it in some format.
+    Running locally cus I am NOT paying shit.
+        Use gguf + 0llama for quick setup and fast inference. (speed will be important when I move to cloud hardware).
+    Possible choices (given by GPT): LLaMA 3 8B, Mistral 7B, Mixtral 8x7B, OpenHermes 2.5, Nous-Hermes 2 Mistral
+    Extract into JSON (?) format
+        Each object could be something in the problem (ie. point charge, field origin, charged object)
+        Given values provided for each object.
+        Describe the goal in a way that my program can understand.
+
+2. Do all the maths and stuff to determine the dynamics of the scene.
+    Use numpy (or CuPy for running on GPU) for computations.
+
+3. Pass that info to manim, outputting an mp4 file
+
+4. Display ts to the user (maybe on the web)
