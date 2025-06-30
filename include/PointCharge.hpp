@@ -1,7 +1,5 @@
+#pragma once
 #include <array>
-
-#ifndef CHARGE_H
-#define CHARGE_H
 
 class PointCharge {
     private:
@@ -17,5 +15,3 @@ class PointCharge {
         std::array<double, 2> getVelocity0() const {return v0;}
         std::array<double, 2> getAccel0() const {return a0;}
 };
-
-#endif
