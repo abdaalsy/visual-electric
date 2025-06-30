@@ -1,9 +1,9 @@
-# Visual Electric
+# Visual Electric 1.0
 Made to help university and high school students build an intuition for electrodynamic/electrostatics! Enter a problem you're having trouble visualizing and learn from an intuitive animation. This tool will (hopefully) visualize problems involving:
 
-- Coulomb's Law
-- Electric fields
-- Electric potential
+- Coulomb's Law (1.0)
+- Electric fields (?.0)
+- Electric potential (?.0)
 
 ... or a mix of these. 
 
