@@ -1,5 +1,6 @@
 #include "../include/parse.hpp"
 #include "../include/PointCharge.hpp"
+#include <vector>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -18,4 +19,32 @@ json parseFile(std::string path) {
     json jsonObj = json::parse(jsonString);
     std::cout << jsonObj.dump(4) << std::endl;
     return jsonObj;
+}
+
+std::vector<PointCharge> extractPointCharges(json &jsonObj) {
+    std::vector<PointCharge> objects;
+    for (auto &obj : jsonObj["objects"])
+    {
+        double q = obj["charge"].get<double>();
+        double m = obj["mass"].get<double>();
+        std::array<double, 2> p0 = obj["position"].get<std::array<double, 2>>();
+        std::array<double, 2> v0 = obj["velocity"].get<std::array<double, 2>>();
+        std::array<double, 2> a0 = obj["acceleration"].get<std::array<double, 2>>();
+        PointCharge pc(m, q, p0, v0, a0);
+        objects.push_back(pc);
+    }
+    return objects;
+}
+
+std::unordered_map<std::string, double> extractScene(json &jsonObj) {
+    std::unordered_map<std::string, double> scene;
+    double x_min = jsonObj["x_min"].get<double>();
+    double x_max = jsonObj["x_max"].get<double>();
+    double y_min = jsonObj["y_min"].get<double>();
+    double y_max = jsonObj["y_max"].get<double>();
+    scene["x_min"] = x_min;
+    scene["x_max"] = x_max;
+    scene["y_min"] = y_min;
+    scene["y_max"] = y_max;
+    return scene;
 }

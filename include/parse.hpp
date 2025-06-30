@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "../libs/json.hpp"
 #include "PointCharge.hpp"
 
