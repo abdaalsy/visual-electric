@@ -17,7 +17,7 @@ json parseFile(std::string path) {
     buffer << jsonReadFile.rdbuf();
     std::string jsonString = buffer.str();
     json jsonObj = json::parse(jsonString);
-    std::cout << jsonObj.dump(4) << std::endl;
+    std::cout << jsonObj.dump() << std::endl;
     return jsonObj;
 }
 

@@ -11,4 +11,5 @@ add_executable(
     visual_electric
     main.cpp
     src/parse.cpp
+    src/PointCharge.cpp
 )
