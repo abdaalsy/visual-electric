@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "../libs/json.hpp"
-#include "PointCharge.hpp"
+#include "../libs/json/json.hpp"
+#include "velectric.hpp"
 
 using json = nlohmann::json;
 
