@@ -1,21 +1,50 @@
 #include "..\include\velectric.hpp"
 
-PointCharge::PointCharge(double mass, double charge, Eigen::Vector2d pos, Eigen::Vector2d vel, Eigen::Vector2d accel)
-    : q(charge), m(mass), p0(pos), v0(vel), a0(accel) {
+//PointCharge
+PointCharge::PointCharge(double mass, double charge, std::array<double, 2> pos0, std::array<double, 2> vel0, std::array<double, 2> accel0)
+    : q(charge), m(mass), p0(pos0), v0(vel0), a0(accel0) {
         if (mass < 0) {
             mass = -1 * mass;
         }
 }
 
 std::ostream &operator<<(std::ostream &out, const PointCharge &rhs) {
-    out << "Mass: " << rhs.getM() << " kg" << std::endl;
-    out << "Charge: " << rhs.getQ() << " C" << std::endl;
-    out << "Initial Position: (" << rhs.getPosition0().x() << ", " << rhs.getPosition0().y() << ")" << std::endl;
-    out << "Initial Velocity: (" << rhs.getVelocity0()[0] << ", " << rhs.getVelocity0()[1] << ")" << std::endl;
-    out << "Initial Acceleration: (" << rhs.getAccel0()[0] << ", " << rhs.getAccel0()[1] << ")" << std::endl;
+    out << rhs.getQ() << " C";
+    return out;
+}
+//PointCharge
+
+//Scene
+Scene::Scene(std::array<double, 2> botLeft, std::array<double, 2> topRight, double deltaX, double deltaT)
+    : bottomLeft(botLeft), topRight(topRight), deltaX(deltaX) {
+        timesteps = getTimesteps(deltaT);
+        vectorFields.fill(zeroVectorField(botLeft, topRight, deltaX));
+}
+
+std::ostream &operator<<(std::ostream &out, const Scene &rhs) {
+    // out << "Bounding vectors: " << rhs.bottomLeft << ", " << rhs.topRight << std::endl;
+    out << "dx: " << rhs.deltaX << std::endl;
+    out << "timesteps: " << rhs.timesteps << std::endl;
+    out << "charges: " << rhs.charges << std::endl;
     return out;
 }
 
-// write function for computing coulomb's force from another PointCharge, maybe turn this into an operator
-// write function for string representation
-// write function for computing electric field on every point in space (use parallel processing)
+void Scene::addCharge(PointCharge pc) {
+    this->charges.push_back(pc);
+}
+
+std::vector<double> Scene::getTimesteps(double deltaT) {
+    Eigen::VectorXd v = Eigen::VectorXd::LinSpaced(numTimesteps, 0 + deltaT, numTimesteps * deltaT);
+    std::vector<double> timesteps(numTimesteps, 0.0);
+    for (size_t i=0; i < numTimesteps; i++) {
+        timesteps[i] = v[i];
+    }
+    return timesteps;
+}
+
+std::vector<std::vector<std::array<double, 2>>> Scene::zeroVectorField(std::array<double, 2> botLeft, std::array<double, 2> topRight, double delta) {
+    std::vector<std::vector<std::array<double, 2>>> field((topRight[1] - botLeft[1])/delta, std::vector<std::array<double, 2>>((topRight[0]-botLeft[0])/delta, {0, 0}));
+    return field; 
+}
+
+//Scene

@@ -3,49 +3,58 @@
 #include <iostream>
 #include "../libs/Eigen/Dense"   
 
+template <typename T>
+std::ostream &operator<<(std::ostream& out, std::vector<T> rhs) {
+    out << "[";
+    out << rhs[0];
+    for (size_t i=1; i < rhs.size(); i++)
+    {
+        out << ", ";
+        out << rhs[i];
+    }
+    out << "]";
+    return out;
+}
+
 class PointCharge {
     private:
         const double q;
         const double m;
-        const Eigen::Vector2d p0;
-        const Eigen::Vector2d v0;
-        const Eigen::Vector2d a0;
-        const Eigen::Vector2d p;
-        const Eigen::Vector2d v;
-        const Eigen::Vector2d a;
+        const std::array<double, 2> p0;
+        const std::array<double, 2> v0;
+        const std::array<double, 2> a0;
     public:
-        PointCharge(double, double, Eigen::Vector2d, Eigen::Vector2d, Eigen::Vector2d, Eigen::Vector2d, Eigen::Vector2d, Eigen::Vector2d);
+        PointCharge(double, double, std::array<double, 2>, std::array<double, 2>, std::array<double, 2>); // std::array<double, 2>, std::array<double, 2>, std::array<double, 2>);
         double getQ() const {return q;}
         double getM() const {return m;}
-        Eigen::Vector2d getPosition0() const {return p0;}
-        Eigen::Vector2d getVelocity0() const {return v0;}
-        Eigen::Vector2d getAccel0() const {return a0;}
-        Eigen::Vector2d getPosition() const {return p;}
-        Eigen::Vector2d getVelocity() const {return v;}
-        Eigen::Vector2d getAccel() const {return a;}
-        
+        std::array<double, 2> getPosition0() const {return p0;}
+        std::array<double, 2> getVelocity0() const {return v0;}
+        std::array<double, 2> getAccel0() const {return a0;}
     
     friend std::ostream &operator<<(std::ostream&, const PointCharge&);
 };
 
 struct Scene {
-    Scene(Eigen::Vector2d, Eigen::Vector2d, double, std::vector<size_t>);    // minimum constructor
-    const Eigen::Vector2d bottomLeft;
-    const Eigen::Vector2d topRight;
-    const double deltaX;
-    const std::vector<size_t> timesteps;                    // list of time values                    
-    const std::vector<PointCharge> charges;                 // list of charges
-    std::vector<std::vector<Eigen::Vector2d>> positions;    // positions of each charge
-    std::vector<std::vector<std::vector<Eigen::Vector2d>>> vectorFields;
+    private:
+        static const size_t numTimesteps = 10;
+    public:
+        Scene(std::array<double, 2>, std::array<double, 2>, double, double);    // minimum constructor
+        const std::array<double, 2> bottomLeft;
+        const std::array<double, 2> topRight;
+        const double deltaX;
+        std::vector<double> timesteps;                    // list of time values                    
+        std::vector<PointCharge> charges;                 // list of charges
+        std::array<std::vector<std::array<double, 2>>, numTimesteps> positions; // positions of each charge in real space, will be filled as scene is computed
+        std::array<std::vector<std::vector<std::array<double, 2>>>, numTimesteps> vectorFields;
 
-    static std::vector<std::vector<Eigen::Vector2d>> zeroVectorField(Eigen::Vector2d, Eigen::Vector2d, size_t, size_t);  // generate a field of zero vectors
-    static std::vector<Eigen::Vector2d> flatten(std::vector<std::vector<Eigen::Vector2d>>);                              // flatten to 1D, static method
-    static std::vector<std::vector<Eigen::Vector2d>> unflatten(std::vector<Eigen::Vector2d>, size_t, size_t);            // bring back to 2D
+        void addCharge(PointCharge);
+        static std::vector<double> getTimesteps(double);
+        static std::vector<std::vector<std::array<double, 2>>> zeroVectorField(std::array<double, 2>, std::array<double, 2>, double);  // generate a field of zero vectors
+        static std::vector<std::vector<double>> Scene::zeroScalarField(std::array<double, 2>, std::array<double, 2>, double);
+        static void flatten(std::array<double, 2>*, std::vector<std::vector<std::array<double, 2>>>);                              // flatten to 1D, static method
+        static void unflatten(std::vector<std::vector<std::array<double, 2>>>, std::array<double, 2>*, size_t, size_t);            // bring back to 2D
+        void compute();     // use all information to compute positions and vector field at each timestep
 
-    Scene operator+(Scene) const;   // adding fields, appending charge & position list (check that timesteps, deltaX, and bounding vectors are equal)
-    Scene operator*(double) const;  // scalar multiplication
-    Scene &operator+=(Scene);
-    Scene &operator*=(double);
-    friend std::ostream &operator<<(std::ostream&, const Scene&);
-    
+        friend std::ostream &operator<<(std::ostream&, const Scene&);
+
 };

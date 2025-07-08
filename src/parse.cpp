@@ -30,10 +30,7 @@ std::vector<PointCharge> extractPointCharges(json &jsonObj) {
         std::array<double, 2> p0 = obj["position"].get<std::array<double, 2>>();
         std::array<double, 2> v0 = obj["velocity"].get<std::array<double, 2>>();
         std::array<double, 2> a0 = obj["acceleration"].get<std::array<double, 2>>();
-        Eigen::Vector2d pos0(p0[0], p0[1]);
-        Eigen::Vector2d vel0(v0[0], v0[1]);
-        Eigen::Vector2d acc0(a0[0], a0[1]);
-        PointCharge pc(m, q, pos0, vel0, acc0);
+        PointCharge pc(m, q, p0, v0, a0);
         objects.push_back(pc);
     }
     return objects;
