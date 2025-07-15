@@ -16,6 +16,17 @@ std::ostream &operator<<(std::ostream& out, std::vector<T> rhs) {
     return out;
 }
 
+inline void printVectorField(std::vector<std::vector<std::array<double, 2>>> &field) {
+    for (auto &row : field)
+    {
+        for (auto &vec : row)
+        {
+            std::cout << "[" << vec[0] << ", " << vec[1] << "]" << "  ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 class PointCharge {
     private:
         const double q;
@@ -37,6 +48,7 @@ class PointCharge {
 struct Scene {
     private:
         static const size_t numTimesteps = 10;
+        static std::vector<double> getTimesteps(double);
     public:
         Scene(std::array<double, 2>, std::array<double, 2>, double, double);    // minimum constructor
         const std::array<double, 2> bottomLeft;
@@ -48,9 +60,7 @@ struct Scene {
         std::array<std::vector<std::vector<std::array<double, 2>>>, numTimesteps> vectorFields;
 
         void addCharge(PointCharge);
-        static std::vector<double> getTimesteps(double);
         static std::vector<std::vector<std::array<double, 2>>> zeroVectorField(std::array<double, 2>, std::array<double, 2>, double);  // generate a field of zero vectors
-        static std::vector<std::vector<double>> Scene::zeroScalarField(std::array<double, 2>, std::array<double, 2>, double);
         static void flatten(std::array<double, 2>*, std::vector<std::vector<std::array<double, 2>>>);                              // flatten to 1D, static method
         static void unflatten(std::vector<std::vector<std::array<double, 2>>>, std::array<double, 2>*, size_t, size_t);            // bring back to 2D
         void compute();     // use all information to compute positions and vector field at each timestep

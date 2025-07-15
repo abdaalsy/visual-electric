@@ -43,8 +43,15 @@ std::vector<double> Scene::getTimesteps(double deltaT) {
 }
 
 std::vector<std::vector<std::array<double, 2>>> Scene::zeroVectorField(std::array<double, 2> botLeft, std::array<double, 2> topRight, double delta) {
-    std::vector<std::vector<std::array<double, 2>>> field((topRight[1] - botLeft[1])/delta, std::vector<std::array<double, 2>>((topRight[0]-botLeft[0])/delta, {0, 0}));
+    std::vector<std::vector<std::array<double, 2>>> field((int)((topRight[1] - botLeft[1])/delta), std::vector<std::array<double, 2>>((int)((topRight[0]-botLeft[0])/delta), {0.0, 0.0}));
     return field; 
 }
 
+void Scene::flatten(std::array<double, 2>*, std::vector<std::vector<std::array<double, 2>>>) {
+    ;
+}
+
+void Scene::unflatten(std::vector<std::vector<std::array<double, 2>>>, std::array<double, 2>*, size_t, size_t) {
+    ;
+}
 //Scene

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.1)
-project(VisualElectric VERSION 1.0 LANGUAGE CXX CUDA)
+project(VisualElectric VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,7 +10,6 @@ set(SOURCES
     main.cpp 
     src/velectric.cpp 
     src/parse.cpp
-    src/velectric.cu
 )
 add_executable(VisualElectric ${SOURCES})
 
