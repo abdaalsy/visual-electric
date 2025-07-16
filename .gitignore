@@ -2,4 +2,8 @@
 /.vscode
 /builds
 /libs
+
+/plots
+/videos
+
 src/__pycache__
