@@ -16,9 +16,7 @@
         }
     ],
     "scene": {
-        "x_min": -5.0,
-        "x_max": 5.0,
-        "y_min": -5.0,
-        "y_max": 5.0
+        "bottomLeft": [0.0, 0.0],
+        "topRight": [10.0, 10.0]
     }
 }
