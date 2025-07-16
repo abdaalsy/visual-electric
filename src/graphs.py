@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
+from os import makedirs
 
 # shape of positions: (numTimesteps, numCharges, 2)
 
@@ -15,21 +16,31 @@ def posToDisplacements(positions):
             displacements[l, i] = displacements[l, 0:i+1].sum()
     return displacements
 
-def displacementsGraph(charges: np.typing.NDArray[np.float32], positions) -> None:
+def displacementsGraph(charges: np.typing.NDArray[np.float32], positions, times) -> None:
     """
     charges is just an array of doubles. But positions is an array of each charge's position at each time step.
     On the plot, each curve will be labelled in the format <charge> @ (x, y) where (x, y) is the initial position.
     """
     displacements = posToDisplacements(positions)
-    plotAll = lambda array, charges: [plt.plot(array[i], label=f"{charges[i]} C @ {positions[0, i]}") for i in range(len(charges))]
+
+    print("Positions:")
+    print(positions)
+    print("\nTimes")
+    print(times)
+    print("\nDisplacements:")
+    print(displacements)
+    
+    plotAll = lambda array, charges: [plt.plot(times, array[i], label=f"{charges[i]} C @ {f'({positions[0, i][0]}, {positions[0, i][1]})'}") for i in range(len(charges))]
     plotAll(displacements, charges)
     plt.title("Displacements of Charges")
-    plt.xlabel("timesteps")
+    plt.xlabel("Time (s)")
     plt.ylabel("Displacement (m)")
     plt.legend()
+    makedirs("plots", exist_ok=True)
     plt.savefig(f"plots/plot_{datetime.now().strftime('%Y-%m-%d_%H;%M;%S')}.png")
     plt.show()
 
+# test inputs (COMMENT OUT BEFORE USE)
+times = np.linspace(0, 10, 5, dtype=np.float32)
 positions = np.random.randint(0, 50, size=(5, 3, 2))
-print(positions)
-displacementsGraph(np.array([1, 2, 3], dtype=np.float32), positions)
+displacementsGraph(np.array([1, 2, 3], dtype=np.float32), positions, times)
