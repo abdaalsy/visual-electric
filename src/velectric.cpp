@@ -1,4 +1,4 @@
-#include "..\include\velectric.hpp"
+#include <velectric.hpp>
 
 
 inline double square(double x) {
@@ -63,11 +63,26 @@ std::vector<std::vector<Vec2>> Scene::zeroVectorField(Vec2 botLeft, Vec2 topRigh
     return field; 
 }
 
-void Scene::flatten(Vec2*, std::vector<std::vector<Vec2>>) {
-    ;
+void Scene::flatten(Vec2* dest, std::vector<std::vector<Vec2>> source) {
+    // assume dest is adequately sized
+    size_t i = 0;
+    for (size_t row=0; row < source.size(); row++) {
+        for (size_t col=0; col < source[row].size(); col++) {
+            dest[i++] = source[row][col];
+        }
+    }
 }
 
-void Scene::unflatten(std::vector<std::vector<Vec2>>, Vec2*, size_t, size_t) {
-    ;
+void Scene::unflatten(std::vector<std::vector<Vec2>> dest, Vec2* source, size_t length, size_t rowLen) {
+    size_t currentRow = 0;
+    size_t currentCol = 0;
+    for (size_t i=0; i < length; i++) {
+        dest[currentRow][currentCol] = source[i];
+        currentCol++;
+        if (currentCol >= rowLen) {
+            currentCol = 0;
+            currentRow++;
+        }
+    }
 }
 //Scene
