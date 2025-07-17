@@ -4,25 +4,26 @@
 
 #define K 8.99E9
 
-__device__ inline double square(double x) {
+__host__ __device__ inline double square(double x) {
     return x * x;
 }
 
-__device__ inline double magnitude(std::array<double, 2> v) {
-    return sqrt(square(v[0]) + square(v[1]));
+__host__ __device__ inline double Vec2::magnitude() const {
+    return sqrt(square(this->x) + square(this->y));
 }
 
-__device__ inline std::array<double, 2> unitVector(std::array<double, 2> v) {
-    return {v[0]/magnitude(v), v[1]/magnitude(v)};
+__host__ __device__ inline Vec2 Vec2::unitVector() const {
+    const double mag = this->magnitude();
+    return {this->x/mag, this->y/mag};
 }
 
-__device__ inline std::array<double, 2> electricField(double charge, std::array<double, 2> r) {
-    std::array<double, 2> eField = {0, 0};
-    double magn = magnitude(r);
-    std::array<double, 2> unitR = unitVector(r);
-    eField[0] = (K * charge / square(magn)) * unitR[0];
-    eField[1] = (K * charge / square(magn)) * unitR[1];
-    return eField;
+__device__ inline Vec2 electricField(double charge, Vec2 r) {
+    Vec2 eField = {0, 0};
+    const double magn = r.magnitude();
+    Vec2 unitR = r.unitVector();
+    eField.x = (K * charge / square(magn)) * unitR.x;
+    eField.y = (K * charge / square(magn)) * unitR.y;
+    return eField;  
 }
 
 void Scene::compute() {
@@ -40,13 +41,14 @@ void Scene::compute() {
     //              update all variables and additionally add to positions list.
 }
 
-__global__ void addFields(std::array<double, 2>* sum, std::array<double, 2>* field1, std::array<double, 2>* field2) {
-    int i = threadIdx.x + blockIdx.x * blockDim.x;  // i is guaranteed to be between 0 and the capacity due to the threads we allocate
-    sum[i][0] = field1[i][0] + field2[i][0];
-    sum[i][1] = field1[i][1] + field2[i][1];
+__global__ void addFields(Vec2* sum, Vec2* field1, Vec2* field2) {
+    const int i = threadIdx.x + blockIdx.x * blockDim.x;  // i is guaranteed to be between 0 and the capacity due to the threads we allocate
+    sum[i].x = field1[i].x + field2[i].x;
+    sum[i].y = field1[i].y + field2[i].y;
 }
 
-__global__ void computeField(std::array<double, 2>* field, std::array<size_t, 2> position) {
-
+__global__ void computeField(Vec2* field, Vec2 pos, double rows, double cols, Vec2 bottomRight, Vec2 bottomLeft, double charge) {
+    /* charge is at row pos[0], column pos[1]. */
+    
 }
 
