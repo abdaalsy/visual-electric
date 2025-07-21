@@ -20,6 +20,10 @@ struct Vec2 {
     double x, y;
     double magnitude() const;
     Vec2 unitVector() const;
+    Vec2 operator+(Vec2&) const;
+    Vec2 operator*(double) const;
+    Vec2 operator-(Vec2&) const;
+    void operator*=(double);
 };
 
 inline void printVectorField(std::vector<std::vector<Vec2>> &field) {
