@@ -1,5 +1,5 @@
 #include <velectric.hpp>
-
+#include <Eigen/Dense>
 
 inline double square(double x) {
     return x * x;
@@ -32,14 +32,14 @@ std::ostream &operator<<(std::ostream &out, const PointCharge &rhs) {
 
 //Scene
 Scene::Scene(Vec2 botLeft, Vec2 topRight, double deltaX, double deltaT)
-    : bottomLeft(botLeft), topRight(topRight), deltaX(deltaX) {
+    : bottomLeft(botLeft), topRight(topRight), dx(deltaX), dt(deltaT) {
         timesteps = getTimesteps(deltaT);
         vectorFields.fill(zeroVectorField(botLeft, topRight, deltaX));
 }
 
 std::ostream &operator<<(std::ostream &out, const Scene &rhs) {
     // out << "Bounding vectors: " << rhs.bottomLeft << ", " << rhs.topRight << std::endl;
-    out << "dx: " << rhs.deltaX << std::endl;
+    out << "dx: " << rhs.dx << std::endl;
     out << "timesteps: " << rhs.timesteps << std::endl;
     out << "charges: " << rhs.charges << std::endl;
     return out;
@@ -63,7 +63,7 @@ std::vector<std::vector<Vec2>> Scene::zeroVectorField(Vec2 botLeft, Vec2 topRigh
     return field; 
 }
 
-void Scene::flatten(Vec2* dest, std::vector<std::vector<Vec2>> source) {
+size_t Scene::flatten(Vec2* dest, std::vector<std::vector<Vec2>> &source) {
     // assume dest is adequately sized
     size_t i = 0;
     for (size_t row=0; row < source.size(); row++) {
@@ -71,18 +71,17 @@ void Scene::flatten(Vec2* dest, std::vector<std::vector<Vec2>> source) {
             dest[i++] = source[row][col];
         }
     }
+    return i;
 }
 
-void Scene::unflatten(std::vector<std::vector<Vec2>> dest, Vec2* source, size_t length, size_t rowLen) {
-    size_t currentRow = 0;
-    size_t currentCol = 0;
+void Scene::unflatten(std::vector<std::vector<Vec2>> &dest, Vec2* source, size_t length, size_t rows) {
+    size_t row;
+    size_t col;
+    const size_t rowLen = length/rows;
     for (size_t i=0; i < length; i++) {
-        dest[currentRow][currentCol] = source[i];
-        currentCol++;
-        if (currentCol >= rowLen) {
-            currentCol = 0;
-            currentRow++;
-        }
+        row = i/rowLen;
+        col = i%rowLen;
+        dest[row][col] = source[i];
     }
 }
 //Scene
