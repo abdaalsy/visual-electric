@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
 #include <iostream>
-#include "../libs/Eigen/Dense"   
+#include <vector>
 
 template <typename T>
 std::ostream &operator<<(std::ostream& out, std::vector<T> rhs) {
@@ -59,7 +59,8 @@ struct Scene {
         Scene(Vec2, Vec2, double, double);    // minimum constructor
         const Vec2 bottomLeft;
         const Vec2 topRight;
-        const double deltaX;
+        const double dx;
+        const double dt; 
         std::vector<double> timesteps;                    // list of time values                    
         std::vector<PointCharge> charges;                 // list of charges
         std::array<std::vector<Vec2>, numTimesteps> positions; // positions of each charge in real space, will be filled as scene is computed
@@ -67,8 +68,8 @@ struct Scene {
 
         void addCharge(PointCharge);
         static std::vector<std::vector<Vec2>> zeroVectorField(Vec2, Vec2, double);  // generate a field of zero vectors
-        static void flatten(Vec2*, std::vector<std::vector<Vec2>>);                              // flatten to 1D, static method
-        static void unflatten(std::vector<std::vector<Vec2>>, Vec2*, size_t, size_t);            // bring back to 2D
+        static size_t flatten(Vec2*, std::vector<std::vector<Vec2>>&);                              // flatten to 1D, static method
+        static void unflatten(std::vector<std::vector<Vec2>>&, Vec2*, size_t, size_t);            // bring back to 2D
         void compute();     // use all information to compute positions and vector field at each timestep
 
         friend std::ostream &operator<<(std::ostream&, const Scene&);

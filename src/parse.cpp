@@ -1,5 +1,5 @@
-#include "../include/parse.hpp"
-#include "../include/velectric.hpp"
+#include <parse.hpp>
+#include <velectric.hpp>
 #include <vector>
 #include <string>
 #include <fstream>
