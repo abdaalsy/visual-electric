@@ -6,6 +6,11 @@ inline double square(double x) {
 }
 
 //Vec2
+std::ostream &operator<<(std::ostream &out, Vec2 &v) {
+    out << "[" << v.x << ", " << v.y << "]";
+    return out;
+}
+
 inline double Vec2::magnitude() const {
     return sqrt(square(this->x) + square(this->y));
 }
@@ -13,22 +18,6 @@ inline double Vec2::magnitude() const {
 inline Vec2 Vec2::unitVector() const {
     const double mag = this->magnitude();
     return {this->x/mag, this->y/mag};
-}
-
-Vec2 Vec2::operator*(double a) const {
-    return {this->x * a, this->y * a};
-}
-
-Vec2 Vec2::operator+(Vec2 &other) const {
-    return {this->x - other.x, this->y - other.y};
-}
-
-Vec2 Vec2::operator-(Vec2 &other) const {
-    return {*this + other * (-1)};
-}
-
-void Vec2::operator*=(double a){
-    *this = *this * a;
 }
 //Vec2
 
