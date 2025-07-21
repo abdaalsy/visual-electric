@@ -14,6 +14,22 @@ inline Vec2 Vec2::unitVector() const {
     const double mag = this->magnitude();
     return {this->x/mag, this->y/mag};
 }
+
+Vec2 Vec2::operator*(double a) const {
+    return {this->x * a, this->y * a};
+}
+
+Vec2 Vec2::operator+(Vec2 &other) const {
+    return {this->x - other.x, this->y - other.y};
+}
+
+Vec2 Vec2::operator-(Vec2 &other) const {
+    return {*this + other * (-1)};
+}
+
+void Vec2::operator*=(double a){
+    *this = *this * a;
+}
 //Vec2
 
 //PointCharge
